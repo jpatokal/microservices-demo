@@ -169,7 +169,7 @@ Find **Protocol Buffers Descriptions** at the [`./pb` directory](./pb).
 
 1. Create a GKE cluster (described above).
 
-2. Use [Istio on GKE add-on](https://cloud.google.com/istio/docs/istio-on-gke/installing)
+1. Use [Istio on GKE add-on](https://cloud.google.com/istio/docs/istio-on-gke/installing)
    to install Istio to your existing GKE cluster.
 
        gcloud beta container clusters update demo \
@@ -184,22 +184,26 @@ Find **Protocol Buffers Descriptions** at the [`./pb` directory](./pb).
    >   "readinessProbe" fields.
    > - `kubernetes-manifests/loadgenerator.yaml`: delete "initContainers" field.
 
-3. Install the automatic sidecar injection (annotate the `default` namespace
+1. Install the automatic sidecar injection (annotate the `default` namespace
    with the label):
 
        kubectl label namespace default istio-injection=enabled
 
-4. Apply the manifests in [`./istio-manifests`](./istio-manifests) directory.
+1. Wait until Istio deployment is complete and Istio resources like `adapters.config.istio.io` are visible:
+
+       kubectl get crd
+
+1. Apply the manifests in [`./istio-manifests`](./istio-manifests) directory.
 
        kubectl apply -f ./istio-manifests
 
     This is required only once.
 
-5. Deploy the application with `skaffold run --default-repo=gcr.io/[PROJECT_ID]`.
+1. Deploy the application with `skaffold run --default-repo=gcr.io/[PROJECT_ID]`.
 
-6. Run `kubectl get pods` to see pods are in a healthy and ready state.
+1. Run `kubectl get pods` to see pods are in a healthy and ready state.
 
-7. Find the IP address of your istio gateway Ingress or Service, and visit the
+1. Find the IP address of your istio gateway Ingress or Service, and visit the
    application.
 
        INGRESS_HOST="$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
